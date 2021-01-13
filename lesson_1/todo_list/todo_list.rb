@@ -32,7 +32,7 @@ class TodoList
   end
 
   def to_a
-    @todos.map { |todo| todo.title }
+    @todos.clone
   end
 
   def done?
@@ -54,7 +54,7 @@ class TodoList
   end
 
   def done!
-    @todos.each{ |todo| todo.done! }
+    each{ |todo| todo.done! }
   end
 
   def shift
@@ -71,8 +71,9 @@ class TodoList
   end
 
   def to_s
-    puts "---- Today's Todos ----"
-    @todos.each { |todo| puts todo }
+    string = "---- #{title} ----"
+    string << @todos.map { |todo| todo.to_s.join("\n") }
+    string
   end
 
   def each
@@ -82,8 +83,30 @@ class TodoList
 
   def select
     new_list = TodoList.new(title)
-    @todos.each {|todo| new_list << todo if yield(todo) }
+    each {|todo| new_list << todo if yield(todo) }
     new_list
+  end
+
+  def find_by_title(str)
+    select { |todo| todo.title == str }.first
+  end
+
+  def all_done
+    select { |todo| todo.done? }
+  end
+
+  def all_not_done
+    select { |todo| !(todo.done?) }
+  end
+
+  def mark_done(str)
+    find_by_title(str).done!
+  end
+
+  alias_method :done!, :mark_all_done
+
+  def mark_all_undone
+    each { |todo| todo.undone! }
   end
 end
 
