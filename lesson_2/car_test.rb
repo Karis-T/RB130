@@ -1,20 +1,52 @@
 require 'minitest/autorun'
-require 'minitest/reporters' # removes S/F/. that shows what happened with the test
+require 'minitest/reporters' # removes S/F/. that shows what happened with the test, also adds color
 MiniTest::Reporters.use!
 
 require_relative 'car'
 
 class CarTest < MiniTest::Test
+  # def test_wheels
+  #   car = Car.new
+  #   assert_equal(4, car.wheels)
+  # end
+
+  # def test_bad_wheels
+  #   skip # skip tests when youre in the middle of writing it put it before the test in the method you want to skip
+  #   # pass a string in skip if you want a custom display message
+  #   car = Car.new
+  #   assert_equal(3, car.wheels)
+  # end
+
+  def test_car_exists
+    car = Car.new
+    assert(car)
+  end
+
   def test_wheels
     car = Car.new
     assert_equal(4, car.wheels)
   end
 
-  def test_bad_wheels
-    skip # skip tests when youre in the middle of writing it put it before the test in the method you want to skip
-    # pass a string in skip if you want a custom display message
+  def test_name_is_nil
     car = Car.new
-    assert_equal(3, car.wheels)
+    assert_nil(car.name)
+  end
+
+  def test_raise_initialize_with_arg
+    assert_raises(ArgumentError) {car = Car.new(name: "Joey")} #This code raises an ArgumentError so this code will pass
+  end
+
+  def test_instance_of_car
+    car = Car.new
+    assert_instance_of(Car, car)
+  end
+
+  def test_includes_car
+    car = Car.new
+    arr = [1,2,3]
+    arr << car
+    assert_includes(arr, car)
+    # assert_includes invokes assert_equal in its implementation, and Minitest counts that invocation as a seperate assertion. This means for each assert_includes you'll get 2 assertions - instead of 1.
   end
 end
 
