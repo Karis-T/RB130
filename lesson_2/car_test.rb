@@ -5,47 +5,56 @@ MiniTest::Reporters.use!
 require_relative 'car'
 
 class CarTest < MiniTest::Test
-  # def test_wheels
-  #   car = Car.new
-  #   assert_equal(4, car.wheels)
-  # end
+  def test_value_equality
+    car1 = Car.new
+    car2 = Car.new
 
-  # def test_bad_wheels
-  #   skip # skip tests when youre in the middle of writing it put it before the test in the method you want to skip
-  #   # pass a string in skip if you want a custom display message
-  #   car = Car.new
-  #   assert_equal(3, car.wheels)
-  # end
+    car1.name = "Kim"
+    car2.name = "Kim"
 
-  def test_car_exists
-    car = Car.new
-    assert(car)
-  end
+    assert_equal(car1, car2)
+    assert_same(car1, car2)
 
   def test_wheels
     car = Car.new
     assert_equal(4, car.wheels)
   end
 
-  def test_name_is_nil
+  def test_bad_wheels
+    skip # skip tests when youre in the middle of writing it put it before the test in the method you want to skip
+    # pass a string in skip if you want a custom display message
     car = Car.new
-    assert_nil(car.name)
+    assert_equal(3, car.wheels)
+  end
+
+  def setup
+    @car = Car.new
+  end
+
+  def test_car_exists
+    assert(@car)
+  end
+
+  def test_wheels
+    assert_equal(4, @car.wheels)
+  end
+
+  def test_name_is_nil
+    assert_nil(@car.name)
   end
 
   def test_raise_initialize_with_arg
-    assert_raises(ArgumentError) {car = Car.new(name: "Joey")} #This code raises an ArgumentError so this code will pass
+    assert_raises(ArgumentError) {Car.new(name: "Joey")} #This code raises an ArgumentError so this code will pass
   end
 
   def test_instance_of_car
-    car = Car.new
-    assert_instance_of(Car, car)
+    assert_instance_of(Car, @car)
   end
 
   def test_includes_car
-    car = Car.new
     arr = [1,2,3]
-    arr << car
-    assert_includes(arr, car)
+    arr << @car
+    assert_includes(arr, @car)
     # assert_includes invokes assert_equal in its implementation, and Minitest counts that invocation as a seperate assertion. This means for each assert_includes you'll get 2 assertions - instead of 1.
   end
 end
